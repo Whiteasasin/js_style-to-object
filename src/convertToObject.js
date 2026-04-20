@@ -7,30 +7,21 @@
  */
 function convertToObject(sourceString) {
   // write your code here
-  const result = {};
+  return sourceString
+    .split(';')
+    .map((rule) => rule.trim())
+    .filter((rule) => rule)
+    .reduce((acc, rule) => {
+      const [key, ...rest] = rule.split(':');
 
-  const rules = sourceString.split(';');
+      if (!key || rest.length === 0) {
+        return acc;
+      }
 
-  for (let rule of rules) {
-    rule = rule.trim();
+      acc[key.trim()] = rest.join(':').trim();
 
-    if (!rule) {
-      continue;
-    }
-
-    const parts = rule.split(':');
-
-    if (parts.length < 2) {
-      continue;
-    }
-
-    const key = parts[0].trim();
-    const value = parts.slice(1).join(':').trim();
-
-    result[key] = value;
-  }
-
-  return result;
+      return acc;
+    }, {});
 }
 
 module.exports = convertToObject;
